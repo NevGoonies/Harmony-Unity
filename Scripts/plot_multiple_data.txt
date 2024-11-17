@@ -1,0 +1,75 @@
+# this time we read the data from a file
+
+import matplotlib.pyplot as plt
+import numpy as np
+import sys
+
+width = 500
+
+def circular_append(l, data_point):
+    l.append(data_point)
+    if len(l) > width:
+        l.pop(0)
+
+# check if the argv[1]
+file_name = sys.argv[1]
+file_name2 = sys.argv[2]
+
+f = open(file_name, "r")
+f2 = open(file_name2, "r")
+lines = f.readlines()
+lines2 = f2.readlines()
+
+x = []
+y = []
+
+x2 = []
+y2 = []
+
+plt.ion()
+#  2 plots side by side
+fig, ax = plt.subplots(2, 1)
+ax[0].set_title('EEG 1 '+file_name)
+ax[0].set_xlabel('Time')
+ax[0].set_ylabel('Brain Waves Intensity')
+
+ax[1].set_title('EEG 2 ' + file_name2)
+ax[1].set_xlabel('Time')
+ax[1].set_ylabel('Brain Waves Intensity')
+# fig, ax = plt.subplots()
+plt_line_1, = ax[0].plot(x, y)
+plt_line_2, = ax[1].plot(x, y)
+
+i = 0
+while True:
+    if i >= len(lines) or i >= len(lines2):
+        break
+    i += 1
+    line = lines[i]
+    line2 = lines2[i]
+
+    data = line.split()
+    data2 = line2.split()
+
+    print(data)
+    x.append(i)
+    y.append(float(data[1]))
+    # print(data)
+    x2.append(i)
+    y2.append(float(data2[1]))
+
+    plt_line_1.set_data(x, y)
+    plt_line_2.set_data(x2, y2)
+
+    # ax.relim()
+    # ax.autoscale_view(True,True,True)
+    ax[0].relim()
+    ax[0].autoscale_view(True,True,True)
+
+    ax[1].relim()
+    ax[1].autoscale_view(True,True,True)
+
+    fig.canvas.draw()
+    fig.canvas.flush_events()
+
+f.close()
